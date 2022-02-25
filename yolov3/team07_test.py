@@ -1,4 +1,4 @@
-import detect_temp as detect
+import detect as detect
 import base64
 import cv2
 import numpy as np
@@ -8,14 +8,14 @@ import json
 
 
 #테스트할 이미지의 파일 경로
-filepath = './data/images/foods.jpg'
+filepath = './data/images/삼계탕.jpg'
 with open(filepath, 'rb') as img:
     base64_string = base64.b64encode(img.read())
 
 #run
 opt = detect.parse_opt()
-# opt.weights = 'best copy.pt'
-# opt.weights = 'best_copy.torchscript.pt'
+#weights 설정 (default = 'yolov3.pt)
+opt.weights = 'best_0225.pt'
 opt.save_txt = True
 detect.check_requirements(exclude=('tensorboard', 'thop'))
 #detect

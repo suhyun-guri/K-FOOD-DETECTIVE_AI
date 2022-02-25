@@ -190,10 +190,13 @@ def is_ascii(s=''):
     return len(s.encode().decode('ascii', 'ignore')) == len(s)
 
 
-def is_chinese(s='人工智能'):
-    # Is string composed of any Chinese characters?
-    return re.search('[\u4e00-\u9fff]', s)
+# def is_chinese(s='人工智能'):
+#     # Is string composed of any Chinese characters?
+#     return re.search('[\u4e00-\u9fff]', s)
 
+def is_korean(s='수현과서윤'):
+    # Is string composed of any Korean characters?
+    return re.search('[\uAC00-\uD7A3]', s)
 
 def emojis(str=''):
     # Return platform-dependent emoji-safe version of string
