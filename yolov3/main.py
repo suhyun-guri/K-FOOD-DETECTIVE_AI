@@ -21,7 +21,8 @@ def yolo_detect():
         print(request)
         img = request.get_json()["img"]
         opt = detect.parse_opt()
-        opt.save_txt = True
+        #weights 설정 (default = 'yolov3.pt)
+        opt.weights = 'best_0225.pt'
         detect.check_requirements(exclude=('tensorboard', 'thop'))
         #detect
         output_dict = detect.run(**vars(opt), source=img)
