@@ -126,11 +126,11 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
     #     dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
     #     bs = len(dataset)  # batch_size
     # else:
-    #     dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
+        # dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
     #     bs = 1  # batch_size
     # vid_path, vid_writer = [None] * bs, [None] * bs
-    img = letterbox(source, imgsz, stride=32, auto=True)[0]
-    img = img.transpose((2, 0, 1))[::-1]
+    img = letterbox(source, imgsz, stride=stride, auto=True)[0] # BGR
+    img = img.transpose((2, 0, 1))[::-1] # HWC to CHW, BGR to RGB
     img = np.ascontiguousarray(img)
     dataset = [[None, img, source, None, None]]
     bs = 1  # batch_size
@@ -162,6 +162,8 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         # pred = utils.general.apply_classifier(pred, classifier_model, im, im0s)
 
         # Process predictions
+        bbox_list = []
+        class_list = []
         for i, det in enumerate(pred):  # per image
             seen += 1
             # if webcam:  # batch_size >= 1
@@ -177,8 +179,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
             annotator = Annotator(im0, line_width=line_thickness, example=str(names))
-            bbox_list = []
-            class_list = []
+            
             if len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
@@ -187,15 +188,12 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                 # for c in det[:, -1].unique():
                 #     n = (det[:, -1] == c).sum()  # detections per class
                 #     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-
                 # Write results
-                bbox_list = []
-                class_list = []
                 for *xyxy, conf, cls in reversed(det):
-                    if save_txt:  # Write to file
-                        xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                        bbox_list.append(xywh)
-                        class_list.append(class_dict[str(int(cls))])
+                    # if save_txt:  # Write to file
+                    xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
+                    bbox_list.append(xywh)
+                    class_list.append(class_dict[str(int(cls))])
                     #     line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
                     #     with open(txt_path + '.txt', 'a') as f:
                     #         f.write(('%g ' * len(line)).rstrip() % line + '\n')
