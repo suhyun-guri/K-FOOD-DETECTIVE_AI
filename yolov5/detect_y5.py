@@ -178,6 +178,8 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
             # s += '%gx%g ' % im.shape[2:]  # print string
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
+            if im0.shape[0] >= 1000:
+                line_thickness = 10
             annotator = Annotator(im0, line_width=line_thickness, example=str(names))
             
             if len(det):
@@ -185,6 +187,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                 det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
 
                 # Print results
+                # print(det)
                 # for c in det[:, -1].unique():
                 #     n = (det[:, -1] == c).sum()  # detections per class
                 #     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
@@ -192,7 +195,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                 for *xyxy, conf, cls in reversed(det):
                     # if save_txt:  # Write to file
                     xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                    bbox_list.append(xywh)
+                    bbox_list.append(xyxy)
                     class_list.append(class_dict[str(int(cls))])
                     #     line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
                     #     with open(txt_path + '.txt', 'a') as f:
@@ -200,7 +203,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
                     # if save_img or save_crop or view_img:  # Add bbox to image
                     c = int(cls)  # integer class
-                    label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
+                    label = None if hide_labels else (class_dict[str(int(cls))] if hide_conf else f'{class_dict[str(int(cls))]} {conf:.2f}')
                     annotator.box_label(xyxy, label, color=colors(c, True))
                         # if save_crop:
                         #     save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
