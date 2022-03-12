@@ -26,7 +26,9 @@ def yolo_detect():
     
     #모델에 통과시키기
     opt = detect.parse_opt()
-    opt.device = 'cpu'
+    #hide confidence
+    opt.hide_conf = True
+    # opt.device = 'cpu'
     opt.weights = '/home/team07/yolov5/runs/train/batch_16_0.004_epoch_50_v5x6/weights/best.pt'
     detect.check_requirements(exclude=('tensorboard', 'thop'))
     output_dict = detect.run(**vars(opt), source=source_img)
