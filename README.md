@@ -35,3 +35,7 @@ K-FOOD DETECTIVE : Find out the Korean foods that you saw for the first time in 
 - 회원가입 및 로그인 기능
 - 음식 정보 및 레시피와 음식 적합도 결과 북마킹 기능
 - 음식 별 정보 공유 및 소통을 위한 댓글 등록 및 수정/삭제 기능
+### 스토리보드 & 시나리오
+
+- [전체 페이지 - Figma](https://www.figma.com/file/QPlgmWw0P9GKdL4x3zItNK/%5BCompleted%5D-K-Food-Searching?node-id=0%3A1) <br>
+- [구현 예시](https://www.figma.com/proto/QPlgmWw0P9GKdL4x3zItNK/%5BCompleted%5D-K-Food-Searching?node-id=4%3A2&scaling=scale-down&page-id=0%3A1&starting-point-node-id=4%3A2)
